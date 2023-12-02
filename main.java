@@ -45,15 +45,19 @@ public class main {
 			SminHit+= MinDex;
 			
 			int SDps = CalcSharp(MedHit, SMedHit, Psharp);
+			int FhandHit = CalcFHand(MedHit, PFhand);
 			int FDps = CalcFHand(SDps, PFhand);
 			
+			
+		System.out.println("HITS :  ");
 		System.out.println("Maximo = "+SMaxHit);
 		System.out.println("Médio = "+MedHit);
 		System.out.println("Médio Sharp = "+SMedHit);
 		System.out.println("Minimo = "+MinHit);
-		
-		System.out.println("DPS físico com Sharpshooter : "+SDps);
-		System.out.println("DPS com Sharpshooter e Fast hands : "+FDps);
+		System.out.println("DPS ");
+		System.out.println("Sharpshooter : "+SDps);
+		System.out.println("Fast Hands : "+FhandHit);
+		System.out.println("Total : "+FDps);
 		
 		//Spell
 		double Mmult = 1.8; //1.8 - (2.2 holy rose)
@@ -68,17 +72,19 @@ public class main {
 		int Dspell = (int) (Dex*0.75);
 		//dexterity
 		Spell += Dspell;
-		System.out.println("Spellpower : "+Spell);
-		System.out.println("Spellpower Holy rose : "+(LSpell+Dspell+Hspell));
+		System.out.println("SPELLPOWER : ");
+		System.out.println("Padrão : "+Spell);
+		System.out.println("Holy rose : "+(LSpell+Dspell+Hspell));
 		
 		//Burst
 		int Burst = (int) (Lvl/3 + Math.pow(Mgl, 1.33333333));
 		int Minburst = (int) (Burst*0.3);
 		int Maxburst = (int) (Burst*0.7);
-		System.out.println("Burst arrow MIN : "+Minburst);
 		int Medburst = Minburst + (Maxburst-Minburst)/2;
-		System.out.println("Burst arrow MED : "+Medburst);
-		System.out.println("Burst arrow MAX : "+Maxburst);
+		System.out.println("BURST ARROW : ");
+		System.out.println("Minimo : "+Minburst);
+		System.out.println("Médio : "+Medburst);
+		System.out.println("Máximo : "+Maxburst);
 		// formulas magic spell power e DPS
 	}
 	
@@ -111,11 +117,10 @@ public class main {
 	
 	public static int CalcSharp(int MedHit,int SMedHit, int PSharp) {
 		
-		MedHit = MedHit *3;
-		SMedHit = SMedHit *3;
+		PSharp=PSharp*3;
 		int normal = MedHit * (100-PSharp);
 		int sharp = SMedHit * PSharp;
-		int SS = (normal + sharp) / 300;
+		int SS = (normal + sharp) / 100;
 		return SS;
 	}
 
