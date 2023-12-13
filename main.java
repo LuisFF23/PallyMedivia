@@ -4,67 +4,101 @@ public class main {
 
 	public static void main(String[] args) {
 		
-		Scanner in = new Scanner(System.in);
-		System.out.println("Informe o LEVEL do paladino :");
-		int Lvl = Integer.parseInt(in.nextLine());
-		System.out.println("Informe a skill DISTANCE :");
-		int Skill = Integer.parseInt(in.nextLine());
-		int SSkill = (int) (Skill*1.10);
-		System.out.println("Informe o ATK da munição incluindo FLAWLESS :");
-		int Atk = Integer.parseInt(in.nextLine());
-		System.out.println("Informe a quantidade de DEX (destreza):");
-		int Dex = Integer.parseInt(in.nextLine());
+		Paladino P = new Paladino();
+		//Input informations
+		InputDat(P);
+		
+		//Hits
+		CalcHits(P);
+		
+		//Spell		
+		int Spell = CalcSpell(P);
+		int Hspell = CalcHspell(P);
+		
+		//Burst
+		BurstDamages(Spell, Hspell);
+		
+		//HMM
+		HmmDamages(Spell, Hspell);
+		
+		//Explosion
+		ExpDamages(Spell, Hspell);
+		
+		// SD
+		SdDamages(Spell, Hspell);
+	}
+	
+	public static void CalcHits (Paladino P) {
+		
+		int Lvl = P.GetLevel();
+		int Skill = P.GetSkill();
+		int Dex = P.GetDextr();
+		int Atk = P.GetAtack();
+		
 		int MaxDex = (int) (Dex*1.2);
 		int MinDex = (int) (Dex*0.8);
-		System.out.println("Informe o Magic Level (ML) :");
-		int Mgl = Integer.parseInt(in.nextLine());
-		System.out.println("Informe a porcentagem de Sharpshooter :");
-		int Psharp = Integer.parseInt(in.nextLine());
-		System.out.println("Informe a porcentagem de Fast hands :");
-		int PFhand = Integer.parseInt(in.nextLine());
-		in.close(); //close input
-			int MaxHit = CalcMax(Skill, Atk);
-			int MinHit = CalcMin(MaxHit, Lvl);
-			int MedHit = CalcMed(MinHit, MaxHit)+Dex;
-			MaxHit+= MaxDex;
-			MinHit+= MinDex;
-			int SMaxHit = CalcMax(SSkill, Atk);
-			int SminHit = CalcMin(SMaxHit, Lvl);
-			int SMedHit = CalcMed(SminHit, SMaxHit)+Dex;
-			SMaxHit+= MaxDex;
-			SminHit+= MinDex;
-			int SDps = CalcSharp(MedHit, SMedHit, Psharp);
-			int FhandHit = CalcFHand(MedHit, PFhand);
-			int FDps = CalcFHand(SDps, PFhand);
+		int SSkill = (int) (Skill*1.10);
+		int MaxHit = CalcMax(Skill, Atk);
+		int MinHit = CalcMin(MaxHit, Lvl);
+		int MedHit = CalcMed(MinHit, MaxHit)+Dex;
+		MaxHit+= MaxDex;
+		MinHit+= MinDex;
+		int SMaxHit = CalcMax(SSkill, Atk);
+		int SminHit = CalcMin(SMaxHit, Lvl);
+		int SMedHit = CalcMed(SminHit, SMaxHit)+Dex;
+		SMaxHit+= MaxDex;
+		SminHit+= MinDex;
+		int Psharp = P.GetSharp();
+		int PFhand = P.GetFasth();
+		int SharpDps = CalcSharp(MedHit, SMedHit, Psharp);
+		int FhandHit = CalcFHand(MedHit, PFhand);
+		int FastDps = CalcFHand(SharpDps, PFhand);
+		
 		System.out.println(" -- HITS  -- ");
 		System.out.println("Min : "+MinHit+" -Sharp : "+SminHit);
 		System.out.println("Max : "+MaxHit+" -Sharp : "+SMaxHit);
 		System.out.println("Med : "+MedHit+" -Sharp : "+SMedHit);
 		System.out.println(" -- DPS -- ");
-		System.out.println("Sharp : "+SDps);
+		System.out.println("Sharp : "+SharpDps);
 		System.out.println("Fast  : "+FhandHit);
-		System.out.println("Total : "+FDps);
-		//Spell
-		double Mmult = 1.8; //1.8 - (2.2 holy rose)
-		double LSpell = (Lvl*1.3);
-		//level
-		double Mspell = (Math.pow(Mgl,(1.4))*Mmult);
-		//magic level
-		double Dspell = (Dex*0.75);
-		//dexterity
-		double HLspell = (Math.pow(Mgl,(1.4))*2.2);
-		//holy rose
-		int Hspell =(int) (HLspell+LSpell+Dspell);
-		int Spell = (int) (LSpell);
-		Spell += (int) Mspell+Dspell;
+		System.out.println("Total : "+FastDps);
 		
-		//System.out.println(" Level "+LSpell);
-		//System.out.println(" Magic "+Mspell);
-		//System.out.println(" Dex "+Dspell);
+	}
+	public static int CalcSpell (Paladino P) {
 		
+		int Lvl = P.GetLevel();
+		int Mgl = P.GetMagic();
+		int Dex = P.GetDextr();
 		System.out.println(" -- SPELLPOWER -- ");
-		System.out.println("Padrão : "+Spell+" -Holy : "+Hspell);
-		//Burst
+		//level
+		double LSpell = (Lvl*1.3);
+		//magic level
+		double Mspell = (Math.pow(Mgl,(1.4))*1.8);
+		//dexterity
+		double Dspell = (Dex*0.75);
+		
+		int Spell = (int) (LSpell+ Mspell+Dspell);
+		System.out.print("Padrão : "+Spell);
+		return Spell;
+	}
+	public static int CalcHspell (Paladino P) {
+		
+		int Lvl = P.GetLevel();
+		int Mgl = P.GetMagic();
+		int Dex = P.GetDextr();
+		//level
+		double LSpell = (Lvl*1.3);
+		//magic level
+		double Mspell = (Math.pow(Mgl,(1.4))*2.2);
+		//dexterity
+		double Dspell = (Dex*0.75);
+		
+		int Hspell =(int) (Mspell+LSpell+Dspell);
+		System.out.println(" -Holy : "+Hspell);
+		return Hspell;
+	}
+	public static void BurstDamages (int Spell, int Hspell) {
+		
 		int Minburst = (int) (Spell*0.15);
 		int Maxburst = (int) (Spell*0.35);
 		int Medburst = CalcMed(Minburst, Maxburst);
@@ -75,18 +109,10 @@ public class main {
 		System.out.println("Min : "+Minburst+" -Holy : "+HMinburst);
 		System.out.println("Max : "+Maxburst+" -Holy : "+HMaxburst);
 		System.out.println("Med : "+Medburst+" -Holy : "+HMedburst);
-		// SD
-		int SdMax = (int) (Spell*1.7);
-		int SdMin = (int) (Spell*1.3);
-		int SdMed = CalcMed(SdMin, SdMax);
-		int HSdmax = (int) (Hspell*1.7);
-		int HSdmin = (int) (Hspell*1.3);
-		int HSdmed = CalcMed(HSdmin, HSdmax);
-		System.out.println(" -- SD -- ");
-		System.out.println("Min : "+SdMin+" -Holy : "+HSdmin);
-		System.out.println("Max : "+SdMax+" -Holy : "+HSdmax);
-		System.out.println("Med : "+SdMed+" -Holy : "+HSdmed);
-		//HMM
+		
+	}
+	public static void HmmDamages (int Spell, int Hspell) {
+		
 		int HmmMax = (int) (Spell*0.4);
 		int HmmMin = (int) (Spell*0.2);
 		int HmmMed = CalcMed(HmmMin, HmmMax);
@@ -97,6 +123,58 @@ public class main {
 		System.out.println("Min : "+HmmMin+" -Holy : "+HHmmMin);
 		System.out.println("Max : "+HmmMax+" -Holy : "+HHmmMax);
 		System.out.println("Med : "+HmmMed+" -Holy : "+HHmmMed);
+		
+	}
+	
+	public static void ExpDamages (int Spell, int Hspell) {
+		
+		int ExpMax = (int) (Spell*0.7);
+		int ExpMin = (int) (Spell*0.3);
+		int ExpMed = CalcMed(ExpMin, ExpMax);
+		int HExpMax = (int) (Hspell*0.7);
+		int HExpMin = (int) (Hspell*0.3);
+		int HExpMed = CalcMed(HExpMin, HExpMax);
+		System.out.println(" -- EXPLOSION -- ");
+		System.out.println("Min : "+ExpMin+" -Holy : "+HExpMin);
+		System.out.println("Max : "+ExpMax+" -Holy : "+HExpMax);
+		System.out.println("Med : "+ExpMed+" -Holy : "+HExpMed);
+		
+	}
+	
+	public static void SdDamages (int Spell, int Hspell) {
+		
+		int SdMax = (int) (Spell*1.7);
+		int SdMin = (int) (Spell*1.3);
+		int SdMed = CalcMed(SdMin, SdMax);
+		int HSdmax = (int) (Hspell*1.7);
+		int HSdmin = (int) (Hspell*1.3);
+		int HSdmed = CalcMed(HSdmin, HSdmax);
+		System.out.println(" -- SD -- ");
+		System.out.println("Min : "+SdMin+" -Holy : "+HSdmin);
+		System.out.println("Max : "+SdMax+" -Holy : "+HSdmax);
+		System.out.println("Med : "+SdMed+" -Holy : "+HSdmed);
+		
+	}
+	
+	public static void InputDat(Paladino P) {
+		
+		Scanner in = new Scanner(System.in);
+		System.out.println("Informe o LEVEL do paladino :");
+		P.SetLevel(Integer.parseInt(in.nextLine()));
+		System.out.println("Informe a skill DISTANCE :");
+		P.SetSkill(Integer.parseInt(in.nextLine()));
+		System.out.println("Informe o ATK da munição incluindo FLAWLESS :");
+		P.SetAtack(Integer.parseInt(in.nextLine()));
+		System.out.println("Informe a quantidade de DEX (destreza):");
+		P.SetDextr(Integer.parseInt(in.nextLine()));
+		System.out.println("Informe o Magic Level (ML) :");
+		P.SetMagic(Integer.parseInt(in.nextLine()));
+		System.out.println("Informe a porcentagem de Sharpshooter :");
+		P.SetSharp(Integer.parseInt(in.nextLine()));
+		System.out.println("Informe a porcentagem de Fast hands :");
+		P.SetFasth(Integer.parseInt(in.nextLine()));
+		in.close(); //close input
+		
 	}
 	
 	public static int CalcMax(int Skill, int Atk) {
